@@ -5,11 +5,12 @@ from gvm.transforms import EtreeTransform
 from gvm.xml import pretty_print
 connection = UnixSocketConnection()
 transform = EtreeTransform()
-# Create a PortScanner object
-nm = nmap.PortScanner()
 
-nm.scan('192.168.50.192', arguments='-p 1-65535')
-host = '192.168.50.192'
+
+nm = nmap.PortScanner()
+host = '10.0.2.4'
+nm.scan(host, arguments='-p 1-65535')
+
 
 print (nm.all_hosts())
 with open("PortScan.txt",'a') as f:
