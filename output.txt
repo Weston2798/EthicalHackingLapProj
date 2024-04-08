@@ -1,0 +1,5 @@
+----------
+Protocol : tcp
+port : 135	state : open
+port : 139	state : open
+port : 445	state : open
