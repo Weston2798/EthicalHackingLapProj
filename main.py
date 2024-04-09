@@ -23,7 +23,7 @@ with open("PortScan.txt",'a') as f:
 
 with Gmp(connection=connection, transform=transform) as gmp:
     gmp.authenticate('admin2', '31eba0a4-eb15-4118-8ca4-ed06e13a8329')
-    task_id = gmp.create_task(name='Metasploite_Scan', target=host)
+    task_id = gmp.create_task(name='Metasploite_Scan', target_id='23b0a7bd-6620-4c32-bac0-c1598af2a014',)
     gmp.start_task(task_id)
     gmp.wait_task(task_id)
     results = gmp.get_results(task_id)
