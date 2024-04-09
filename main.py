@@ -9,7 +9,7 @@ transform = EtreeTransform()
 
 nm = nmap.PortScanner()
 host = '10.0.2.4'
-nm.scan(host, arguments='-p 1-65535')
+nm.scan(host, arguments='-p 1-2000')
 
 
 print (nm.all_hosts())
@@ -23,8 +23,7 @@ with open("PortScan.txt",'a') as f:
 
 with Gmp(connection=connection, transform=transform) as gmp:
     gmp.authenticate('admin2', '31eba0a4-eb15-4118-8ca4-ed06e13a8329')
-    target = host
-    task_id = gmp.create_task(name='Metasploite_Scan', target=target)
+    task_id = gmp.create_task(name='Metasploite_Scan', target=host)
     gmp.start_task(task_id)
     gmp.wait_task(task_id)
     results = gmp.get_results(task_id)
