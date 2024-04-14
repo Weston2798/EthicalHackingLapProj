@@ -1,27 +1,16 @@
-from scapy.all import *
-import time
+from scapy.all import sniff, IP, TCP
 
-# Define the function to detect ICMP Echo Request floods
-def detect_ping_flood(pkt_list, threshold=100, window=10):
-    start_time = time.time()
-    count = 0
-    for pkt in pkt_list:
-        if ICMP in pkt and pkt[ICMP].type == 8:  # Check if the packet is ICMP Echo Request (ping)
-            count += 1
-    elapsed_time = time.time() - start_time
-    if elapsed_time >= window:  # Check if the time window has elapsed
-        if count >= threshold:  # Check if the number of packets exceeds the threshold
-            print("Potential ping flood detected! Packets received:", count)
-            # Add code here to trigger an alert or take other actions
-    return count
+def detect_port_scan(packet):
+    if packet.haslayer(IP) and packet.haslayer(TCP):
+        ip_src = packet[IP].src
+        ip_dst = packet[IP].dst
+        tcp_sport = packet[TCP].sport
+        tcp_dport = packet[TCP].dport
+        
+        # Check for multiple SYN packets from the same source to different ports
+        if packet[TCP].flags == 2:  # SYN flag set
+            print(f"Suspicious SYN packet detected from {ip_src} to port {tcp_dport}")
 
-# Define the callback function for packet sniffing
-def packet_callback(pkt):
-    pkt_list.append(pkt)
-    detect_ping_flood(pkt_list)
-
-# Initialize the list to store received packets
-pkt_list = []
-
-# Start sniffing traffic on the specified interface
-sniff(iface="en0", filter="icmp", prn=packet_callback)
+# Sniff packets and call detect_port_scan function for each packet
+def start_detecting():
+    sniff(filter="tcp", prn=detect_port_scan, store=0)
